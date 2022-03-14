@@ -1,4 +1,5 @@
 import numpy as np
+import scipy.linalg
 
 ### Function to define h matrix
 def hMatrix (x,Np):
@@ -18,7 +19,8 @@ def gMatrix (x,Np):
             
     return g
     
-### Function for complete buckling analysis, returns only the first buckling mode
+### Function for buckling analysis by curvature-based displacement interpolation
+# returns only the first buckling mode
 def PcrCBDI(x,EI,L):
     Np = len(x)
     
@@ -43,3 +45,35 @@ def PcrCBDI(x,EI,L):
     [v,d] = np.linalg.eig(np.dot(-L**2*lstar,F))    
     
     return min(1/v)
+
+### Function for buckling analysis by matrix structural analysis
+# returns only the first buckling mode
+def PcrMatrix(EI,L):
+    N = len(EI)
+    if N <= 1:
+        raise Exception('This function requires 2 or more segments')
+    Ke = np.zeros((2*N,2*N))
+    Kg = np.zeros((2*N,2*N))
+    for i in range(N):
+        ke = EI[i]*np.array([
+            [ 12/L[i]**3,  6/L[i]**2, -12/L[i]**3,  6/L[i]**2], 
+            [  6/L[i]**2,  4/L[i],     -6/L[i]**2,  2/L[i]],
+            [-12/L[i]**3, -6/L[i]**2,  12/L[i]**3, -6/L[i]**2],
+            [  6/L[i]**2,  2/L[i],     -6/L[i]**2,  4/L[i]]])
+        kg = np.array([
+            [  1.2/L[i],       0.1,  -1.2/L[i],       0.1], 
+            [       0.1, 2*L[i]/15,       -0.1,  -L[i]/30],
+            [ -1.2/L[i],      -0.1,   1.2/L[i],      -0.1],
+            [       0.1,  -L[i]/30,       -0.1, 2*L[i]/15]])
+        if i == 0:
+            connectivity = {1:0,2:1,3:2}
+        elif i == (N-1):
+            connectivity = {0:(2*N-3),1:(2*N-2),3:(2*N-1)}
+        else:
+            connectivity = {0:(2*i-1),1:(2*i),2:(2*i+1),3:(2*i+2)}
+        for ikey in connectivity:
+            for jkey in connectivity:
+                Ke[connectivity[ikey],connectivity[jkey]] += ke[ikey,jkey]
+                Kg[connectivity[ikey],connectivity[jkey]] += kg[ikey,jkey]
+    a = scipy.linalg.eigh(Ke,Kg,eigvals_only=True)
+    return min(a)

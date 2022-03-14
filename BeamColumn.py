@@ -2,7 +2,7 @@ import openseespy.opensees as ops
 import numpy as np
 import matplotlib.pyplot as plt
 from math import pi,sqrt
-from CBDI import PcrCBDI
+from CBDI import PcrCBDI,PcrMatrix
 
 # Input parameters
 # Units: kips, in, ksi
@@ -48,6 +48,7 @@ elif cross_section_type == 'Elastic':
 else:
     raise Exception('Unknown cross_section_type')
 
+print(f'Pcr = {pi**2*EIgross/L**2}')
 
 # Loading
 P_over_Po = 0.3
@@ -62,6 +63,8 @@ mid_moment = np.zeros(num_steps)
 mid_disp = np.zeros(num_steps)
 end_rotation = np.zeros(num_steps)
 section_stiffness = np.zeros((num_steps,6))
+integration_weights = np.zeros(6*3)
+section_stiffness_full = np.zeros((num_steps,6*3))
 
 # Create OpenSees model
 ops.wipe()  
@@ -109,6 +112,12 @@ ops.element(element_type, 4, 4, 5, 937, 342)
 ops.element(element_type, 5, 5, 6, 937, 342)
 ops.element(element_type, 6, 6, 7, 937, 342)
 
+# Get Integration Weights
+for iEle in range(6):
+    integration_weights[3*iEle+0] = ops.sectionWeight(iEle+1,1)
+    integration_weights[3*iEle+1] = ops.sectionWeight(iEle+1,2)
+    integration_weights[3*iEle+2] = ops.sectionWeight(iEle+1,3)
+
 
 # Define vertical load
 ops.timeSeries("Linear", 177)
@@ -144,13 +153,23 @@ for iStep in range(num_steps):
     end_rotation[iStep] = ops.nodeDisp(1,3)
     for i in range(6):
         section_stiffness[iStep,i] = ops.sectionStiffness(i+1,2)[3]
+        section_stiffness_full[iStep,3*i+0] = ops.sectionStiffness(i+1,1)[3]
+        section_stiffness_full[iStep,3*i+1] = ops.sectionStiffness(i+1,2)[3]
+        section_stiffness_full[iStep,3*i+2] = ops.sectionStiffness(i+1,3)[3]
 
     
 # CBDI Buckling Calculations   
-Pcr = np.zeros(num_steps)
+Pcr_CBDI = np.zeros(num_steps)
 xi = [1/12, 3/12, 5/12, 7/12, 9/12, 11/12]
 for iStep in range(num_steps):
-    Pcr[iStep] = PcrCBDI(xi,section_stiffness[iStep,:],L)
+    Pcr_CBDI[iStep] = PcrCBDI(xi,section_stiffness[iStep,:],L)
+
+# Matrix Buckling Calculations   
+Pcr_Matrix = np.zeros(num_steps)
+for iStep in range(num_steps):
+    Pcr_Matrix[iStep] = PcrMatrix(section_stiffness_full[iStep,:],integration_weights)
+
+print(f'{L = }, {sum(integration_weights)}')
 
 ind = np.argmax(end_moment)
 mid_disp_at_max = mid_disp[ind]    
@@ -180,7 +199,8 @@ if make_simple_plots:
 
     fig3 = plt.figure()
     ax3 = fig3.add_subplot(1,1,1)
-    plt.plot(mid_disp,Pcr,label='Pcr (CBDI)')
+    plt.plot(mid_disp,Pcr_CBDI,label='Pcr (CBDI)')
+    plt.plot(mid_disp,Pcr_Matrix,label='Pcr (Matrix)')
     plt.plot([0,max_disp],[P,P],label='Applied Axial Load')
     plt.plot([mid_disp_at_max,mid_disp_at_max],ax3.get_ylim(),label='Point of Max Applied Moment')
     plt.xlabel('Mid-height Displacement (in.)')
@@ -234,7 +254,8 @@ else:
     ymax = 32.0
     fig3 = plt.figure(figsize=(3.5,2.5))
     ax3 = fig3.add_axes([0.13,0.18,0.84,0.80])
-    plt.plot(mid_disp*in_to_mm,Pcr*kips_to_MN,label='Pcr (CBDI)')
+    plt.plot(mid_disp*in_to_mm,Pcr_CBDI*kips_to_MN,label='Pcr (CBDI)')
+    plt.plot(mid_disp*in_to_mm,Pcr_Matrix*kips_to_MN,'--',label='Pcr (Matrix)')
     plt.plot([0,max_disp*in_to_mm],[P*kips_to_MN,P*kips_to_MN],label='Applied Axial Load')
     plt.plot([mid_disp_at_max*in_to_mm,mid_disp_at_max*in_to_mm],[0,ymax],'--k',label='Point of Max Applied Moment')
     plt.xlabel('Mid-height Displacement (mm)')
