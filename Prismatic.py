@@ -16,9 +16,9 @@ psiArray3_equal = []
 # psiArray1_cheby = []
 # psiArray2_cheby = []
 # psiArray3_cheby = []
-psiArray1_clenshaw = []
-psiArray2_clenshaw = []
-psiArray3_clenshaw = []
+# psiArray1_clenshaw = []
+# psiArray2_clenshaw = []
+# psiArray3_clenshaw = []
 
 
 for Np in Nparray:
@@ -31,9 +31,7 @@ for Np in Nparray:
 
     lstar = np.dot(h,np.linalg.inv(g))
     [v,d] = np.linalg.eig(-lstar)
-    print(v)
     v = sorted(v, reverse=True)
-    print(v)
     
     psiArray1_gauss.append(1/v[0])
     if Np >= 2:
@@ -78,24 +76,24 @@ for Np in Nparray:
     # if Np >= 3:
     #     psiArray3_cheby.append(1/v[2]) 
 
-    # Clenshaw
-    x = []
-    for i in range(Np):
-        z = np.cos((i+1)*np.pi/(Np+1))
-        x.append(0.5*(z+1))
-    
-    h = hMatrix(x,Np)
-    g = gMatrix(x,Np)
-
-    lstar = np.dot(h,np.linalg.inv(g))
-    [v,d] = np.linalg.eig(-lstar)
-    v = sorted(v, reverse=True)
-    
-    psiArray1_clenshaw.append(1/v[0])
-    if Np >= 2:
-        psiArray2_clenshaw.append(1/v[1])
-    if Np >= 3:
-        psiArray3_clenshaw.append(1/v[2]) 
+    # # Clenshaw
+    # x = []
+    # for i in range(Np):
+    #     z = np.cos((i+1)*np.pi/(Np+1))
+    #     x.append(0.5*(z+1))
+    # 
+    # h = hMatrix(x,Np)
+    # g = gMatrix(x,Np)
+    # 
+    # lstar = np.dot(h,np.linalg.inv(g))
+    # [v,d] = np.linalg.eig(-lstar)
+    # v = sorted(v, reverse=True)
+    # 
+    # psiArray1_clenshaw.append(1/v[0])
+    # if Np >= 2:
+    #     psiArray2_clenshaw.append(1/v[1])
+    # if Np >= 3:
+    #     psiArray3_clenshaw.append(1/v[2]) 
     
 
 # Create Figure 
@@ -112,7 +110,7 @@ ax = fig.add_axes([0.15,0.11,0.82,0.25])
 plt.plot([min(Nparray),max(Nparray)],[np.pi**2]*2,'k:',label='Exact')
 plt.plot(Nparray,psiArray1_gauss,'-kx',label='Gauss')
 # plt.plot(Nparray,psiArray1_cheby,'-b+',label='Chebyshev')
-plt.plot(Nparray,psiArray1_clenshaw,'-go',label='Clenshaw')
+# plt.plot(Nparray,psiArray1_clenshaw,'-go',label='Clenshaw')
 plt.plot(Nparray,psiArray1_equal,'-r^',label='Equally Spaced')
 plt.ylim([7,13])
 plt.xlabel('Number of interpolation points, $N_p$')
@@ -122,7 +120,7 @@ ax = fig.add_axes([0.15,0.41,0.82,0.25])
 plt.plot([min(Nparray),max(Nparray)],[4*np.pi**2]*2,'k:',label='Exact')
 plt.plot(Nparray[1:],psiArray2_gauss,'-kx',label='Gauss')
 # plt.plot(Nparray[1:],psiArray2_cheby,'-b+',label='Chebyshev')
-plt.plot(Nparray[1:],psiArray2_clenshaw,'-go',label='Clenshaw')
+# plt.plot(Nparray[1:],psiArray2_clenshaw,'-go',label='Clenshaw')
 plt.plot(Nparray[1:],psiArray2_equal,'-r^',label='Equally Spaced')
 plt.ylim([30,70])
 plt.ylabel('Stability variable, $\psi^2$')
@@ -132,7 +130,7 @@ ax = fig.add_axes([0.15,0.71,0.82,0.25])
 plt.plot([min(Nparray),max(Nparray)],[9*np.pi**2]*2,'k:',label='Exact')
 plt.plot(Nparray[2:],psiArray3_gauss,'-kx',label='Gauss')
 # plt.plot(Nparray[2:],psiArray3_cheby,'-b+',label='Chebyshev')
-plt.plot(Nparray[2:],psiArray3_clenshaw,'-go',label='Clenshaw')
+# plt.plot(Nparray[2:],psiArray3_clenshaw,'-go',label='Clenshaw')
 plt.plot(Nparray[2:],psiArray3_equal,'-r^',label='Equally Spaced')
 plt.ylim([50,200])
 plt.ylabel('Stability variable, $\psi^2$')
