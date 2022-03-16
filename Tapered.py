@@ -31,9 +31,12 @@ for it,taper in enumerate(taperArray):
     psiArray = []
 
     for Np in Nparray:
-        x,y = np.polynomial.legendre.leggauss(Np)
-        x = 0.5*(x+1)
-        print(x)
+        # x,y = np.polynomial.legendre.leggauss(Np)
+        # x = 0.5*(x+1)
+        x = []
+        for i in range(Np):
+            x.append((0.5+i)/Np)
+        # print(x)
         
         h = hMatrix(x,Np)
         g = gMatrix(x,Np)
