@@ -12,23 +12,29 @@ cross_section_type = 'RC'
 if cross_section_type == 'RC':
     # Parameters for RC section
     D = 36
-    xp = 3 # Distance from center of bar to edge of cross section
+    
     L_over_D = 20
-    rho_s = 0.02
-    n_bar = 8
+    L = L_over_D*D
+    
     fc = 4
+    Ec = 57*sqrt(1000*fc)
+    print(f'{Ec = :.2f} ksi')
     Fy = 60
     Es = 29000
-    L = L_over_D*D
+    
+    n_bar = 16
+    Ab = 1.27
+    As = n_bar*Ab
     Ag = pi/4*D**2
-    As = rho_s*Ag
-    Ab = As/n_bar
+    print(f'rho_s = {100*As/Ag:.2f}%')   
+    xp = 3 # Distance from center of bar to edge of cross section
+
     Po = 0.85*fc*(Ag-As) + Fy*As
-    Ec = 57*sqrt(1000*fc)
+
     bar_angles = np.linspace(0,2*pi,n_bar,endpoint=False)
     bay_y = (0.5*D-xp)*np.sin(bar_angles)
     Isr = sum(Ab*bay_y**2)
-    EIgross = Ec*(1/64)*pi*D**4 + Es*Isr
+    EIgross = Ec*((1/64)*pi*D**4-Isr) + Es*Isr
 elif cross_section_type == 'WF':
     # Parameters for WF section (W14x159)
     d = 15.0
@@ -53,6 +59,7 @@ print(f'Pcr = {pi**2*EIgross/L**2}')
 # Loading
 P_over_Po = 0.3
 P = P_over_Po*Po
+print(f'{P = :.2f} kips')
 max_disp = 12
 num_steps = 200
 disp_increment = max_disp/num_steps
@@ -84,12 +91,11 @@ ops.fix(7,1,0,0)
 # Define cross section
 if cross_section_type == 'RC':
     # RC cross section
-    ops.uniaxialMaterial('Concrete01', 605, fc, 2*fc/Ec, 0.2*fc, 0.01)
-    #ops.uniaxialMaterial('ENT',605,2*fc/0.002)
-    #ops.uniaxialMaterial('Concrete01', 605, fc, 0.002, 0.005, 4500.0)
+    ops.uniaxialMaterial('Concrete01', 605, fc, 2*fc/Ec, 0.2*fc, 0.005)
     ops.uniaxialMaterial('ElasticPP', 336, Es, Fy/Es)
     ops.section('Fiber',893)
     ops.patch('circ', 605, 30, 10, 0.0, 0.0, 0.0, 0.5*D, 0.0, 360.0)
+    ops.layer('circ', 605, n_bar, -Ab, 0.0, 0.0, 0.5*D-xp)
     ops.layer('circ', 336, n_bar, Ab, 0.0, 0.0, 0.5*D-xp)
 elif cross_section_type == 'WF':
     ops.uniaxialMaterial('ElasticPP', 336, E, Fy/E)
