@@ -69,7 +69,9 @@ for Np in NpArray:
 
             h = hMatrix(x,Np)
             g = gMatrix(x,Np)
-            lstar = np.dot(h,np.linalg.inv(g))
+            ginv = np.linalg.inv(g)
+            #ginv = np.linalg.solve(g,np.identity(Np))
+            lstar = np.dot(h,ginv)
               
             F = np.zeros((Np,Np))
             for i in range(Np):
@@ -79,15 +81,24 @@ for Np in NpArray:
             [v,d] = np.linalg.eig(np.dot(-L**2*lstar,F))
             psiComputed.append(min(1/v))
             
-        plt.plot(aArray,psiWang[ik,:],'r-')
-        plt.plot(np.append(0,x),np.append(pi**2,psiComputed),'k--x',label=f'k = {k}')
+        if ik == 0:
+            plt.plot(aArray,psiWang[ik,:],'r-',label='Wang et al. 2004')
+            plt.plot(np.append(0,x),np.append(pi**2,psiComputed),'k--x',label='CBDI')
+        else:
+            plt.plot(aArray,psiWang[ik,:],'r-')
+            plt.plot(np.append(0,x),np.append(pi**2,psiComputed),'k--x')
         
-    #plt.legend()
+    plt.text(0.4, 9.0,'$k = \infty$',fontsize=8)
+    plt.text(0.4, 7.6,'$k=$5',fontsize=8)
+    plt.text(0.4, 3.7,'$k=$1',fontsize=8)
+    plt.text(0.4, 2.1,'$k=$0.5',fontsize=8)
+    plt.text(0.4, 0.3,'$k=$0.01',fontsize=8)
+        
+    plt.legend(loc='upper center',ncol=2,frameon=False)
     plt.xlabel('Normalized Location of Weakened Section, $a/L$')
     plt.ylabel('Stability variable, $\psi^2$')
     plt.xlim([0,0.5])
-    plt.ylim([0,10.5])
-    #plt.title(f'$N_p={Np}$ Gauss Integration Points')
+    plt.ylim([0,11.5])
     
     figure_name = {6:'a',10:'b',14:'c'}
     plt.savefig(f'Figure_X{figure_name[Np]}_Weakened.png',dpi=300)
