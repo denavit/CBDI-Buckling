@@ -83,10 +83,12 @@ for Np in NpArray:
             
         if ik == 0:
             plt.plot(aArray,psiWang[ik,:],'r-',label='Wang et al. 2004')
-            plt.plot(np.append(0,x),np.append(pi**2,psiComputed),'k--x',label='CBDI')
+            plt.plot([0,x[0]],[pi**2,psiComputed[0]],'k--')
+            plt.plot(x,psiComputed,'k--x',label='CBDI')
         else:
             plt.plot(aArray,psiWang[ik,:],'r-')
-            plt.plot(np.append(0,x),np.append(pi**2,psiComputed),'k--x')
+            plt.plot([0,x[0]],[pi**2,psiComputed[0]],'k--')
+            plt.plot(x,psiComputed,'k--x')
         
     plt.text(0.4, 9.0,'$k = \infty$',fontsize=8)
     plt.text(0.4, 7.6,'$k=$5',fontsize=8)
@@ -98,7 +100,7 @@ for Np in NpArray:
     plt.xlabel('Normalized Location of Weakened Section, $a/L$')
     plt.ylabel('Stability variable, $\psi^2$')
     plt.xlim([0,0.5])
-    plt.ylim([0,11.5])
+    plt.ylim([-0.2,11.5])
     
     figure_name = {6:'a',10:'b',14:'c'}
     plt.savefig(f'Figure_X{figure_name[Np]}_Weakened.png',dpi=300)
