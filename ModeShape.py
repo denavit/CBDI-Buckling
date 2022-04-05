@@ -30,9 +30,9 @@ m1_exact = np.sin(1*pi*x_exact)
 m2_exact = np.sin(2*pi*x_exact)
 m3_exact = np.sin(3*pi*x_exact)
 
-plt.plot(m1_exact+m1o,x_exact,'k:',label='Exact')
-plt.plot(m2_exact+m2o,x_exact,'k:')
-plt.plot(m3_exact+m3o,x_exact,'k:')
+plt.plot(m1_exact+m1o,x_exact,'k:',linewidth=3,label='Exact')
+plt.plot(m2_exact+m2o,x_exact,'k:',linewidth=3)
+plt.plot(m3_exact+m3o,x_exact,'k:',linewidth=3)
 
 plt.ylim([0.0,1.0])
 plt.xlim([-1.5,6.5])
@@ -64,7 +64,7 @@ for Np in Nparray:
     m_plot = np.insert(m_plot,0,0)
     m_plot = np.append(m_plot,0)
 
-    plt.plot(m_plot+m1o,x_plot,line_styles[Np],label=f'$N_p$ = {Np}')
+    plt.plot(m_plot+m1o,x_plot,line_styles[Np],linewidth=1.5,markersize=6,label=f'$N_p$ = {Np}')
 
     # Plot Mode 2
     if Np >= 2:
@@ -73,7 +73,7 @@ for Np in Nparray:
         m_plot = np.insert(m_plot,0,0)
         m_plot = np.append(m_plot,0)
 
-        plt.plot(m_plot+m2o,x_plot,line_styles[Np])
+        plt.plot(m_plot+m2o,x_plot,line_styles[Np],linewidth=1.5,markersize=6)
     
     # Plot Mode 3
     if Np >= 3:
@@ -82,7 +82,7 @@ for Np in Nparray:
         m_plot = np.insert(m_plot,0,0)
         m_plot = np.append(m_plot,0)
 
-        plt.plot(m_plot+m3o,x_plot,line_styles[Np])  
+        plt.plot(m_plot+m3o,x_plot,line_styles[Np],linewidth=1.5,markersize=6)  
     
 plt.legend(loc='center left')
 
