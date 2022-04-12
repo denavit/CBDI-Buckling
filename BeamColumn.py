@@ -249,9 +249,9 @@ else:
     ax2 = fig2.add_axes([0.19,0.18,0.78,0.79])
     #for iIP in range(6):
     #    plt.plot(mid_disp*in_to_mm,section_stiffness[:,iIP]/EIgross,'-',label=f'Section {iIP}')
-    plt.plot(mid_disp*in_to_mm,section_stiffness[:,0]/EIgross,'-',label=f'Sections 1 & 6 ')
-    plt.plot(mid_disp*in_to_mm,section_stiffness[:,1]/EIgross,'-',label=f'Sections 2 & 5')
-    plt.plot(mid_disp*in_to_mm,section_stiffness[:,2]/EIgross,'-',label=f'Sections 3 & 4')
+    plt.plot(mid_disp*in_to_mm,section_stiffness[:,0]/EIgross,'-',label=f'Elements 1 & 6 ')
+    plt.plot(mid_disp*in_to_mm,section_stiffness[:,1]/EIgross,'-',label=f'Elements 2 & 5')
+    plt.plot(mid_disp*in_to_mm,section_stiffness[:,2]/EIgross,'-',label=f'Elements 3 & 4')
     plt.plot([mid_disp_at_max*in_to_mm,mid_disp_at_max*in_to_mm],ax2.get_ylim(),'--k')
     plt.text(190,0.5,'Limit Point',rotation='vertical',fontfamily='serif',fontsize=8)
     plt.xlabel('Mid-height Displacement, $\delta$ (mm)')
