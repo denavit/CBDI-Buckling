@@ -138,5 +138,5 @@ plt.ylim([50,200])
 plt.text(1.0, 180.0,'3rd Mode',fontsize=8)
 plt.ylabel('Stability variable, $\psi^2$')
 
-plt.savefig('Figure_X_Prismatic.png',dpi=300)
+plt.savefig('Figure_5_Prismatic.png',dpi=300)
 plt.show()

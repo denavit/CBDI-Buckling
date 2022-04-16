@@ -86,5 +86,5 @@ for Np in Nparray:
     
 plt.legend(loc='center left')
 
-plt.savefig('Figure_X_ModeShape.png',dpi=300)
+plt.savefig('Figure_6_ModeShape.png',dpi=300)
 plt.show()

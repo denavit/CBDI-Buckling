@@ -241,7 +241,7 @@ else:
     plt.legend(loc='upper left')
     ax1.set_xlim([0.0, max_disp*in_to_mm])
     ax1.set_ylim([0.0, ymax])
-    plt.savefig('Figure_Xa_BeamColumn.png',dpi=300)
+    plt.savefig('Figure_11a_BeamColumn.png',dpi=300)
 
     # Flexural Stiffness vs. Mid-height Displacement
     ymax = 1.0
@@ -259,7 +259,7 @@ else:
     plt.legend(loc='lower left')
     ax2.set_xlim([0.0, max_disp*in_to_mm])
     ax2.set_ylim([0.0, ymax])
-    plt.savefig('Figure_Xb_BeamColumn.png',dpi=300)
+    plt.savefig('Figure_11b_BeamColumn.png',dpi=300)
 
     # Critical Buckling Load vs. Mid-height Displacement
     ymax = 32.0
@@ -276,6 +276,6 @@ else:
     plt.legend(loc=(0.20,0.76))
     ax3.set_xlim([0.0, max_disp*in_to_mm])
     ax3.set_ylim([0.0, ymax])
-    plt.savefig('Figure_Y_BeamColumn.png',dpi=300)
+    plt.savefig('Figure_12_BeamColumn.png',dpi=300)
 
 plt.show()

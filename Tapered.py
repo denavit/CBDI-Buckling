@@ -67,5 +67,5 @@ plt.xlabel('Number of interpolation points, $N_p$')
 plt.ylabel('Stability variable, $\psi^2$')
 plt.legend(loc='upper right')
 
-plt.savefig('Figure_X_Tapered.png',dpi=300)
+plt.savefig('Figure_8_Tapered.png',dpi=300)
 plt.show()

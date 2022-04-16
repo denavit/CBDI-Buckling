@@ -103,5 +103,5 @@ for Np in NpArray:
     plt.ylim([-0.2,11.5])
     
     figure_name = {6:'a',10:'b',14:'c'}
-    plt.savefig(f'Figure_X{figure_name[Np]}_Weakened.png',dpi=300)
+    plt.savefig(f'Figure_9{figure_name[Np]}_Weakened.png',dpi=300)
     plt.show()
