@@ -13,7 +13,7 @@ if __name__ == "__main__":
         for i in range(Np):
             h[i,j] = (xi[i]**(j+2)-xi[i])/((j+1)*(j+2))
 
-    # Form g (Vandermonde) matrix
+    # Form g matrix
     g = np.zeros((Np,Np))
     for j in range(Np):
         for i in range(Np):
@@ -25,7 +25,7 @@ if __name__ == "__main__":
         F[i,i] = 1/EI[i]
 
     lstar = np.dot(h,np.linalg.inv(g))
-    [v,d] = np.linalg.eig(np.dot(-L**2*lstar,F))
+    [v,d] = np.linalg.eig(np.dot(-L*L*lstar,F))
 
     Pcr = 1/max(v)
 
